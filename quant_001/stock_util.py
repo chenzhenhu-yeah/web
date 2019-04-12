@@ -1,9 +1,9 @@
 #  -*- coding: utf-8 -*-
 import pandas as pd
 from pymongo import ASCENDING, DESCENDING
-from database import DB_CONN
 from datetime import datetime, timedelta
 
+from quant_001.database import DB_CONN
 
 def get_trading_dates_mongo(begin_date=None, end_date=None):
     """

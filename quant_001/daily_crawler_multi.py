@@ -248,7 +248,11 @@ def run():
     # 获取所有股票代码
     stock_df = ts.get_stock_basics()
     codes = list(stock_df.index)
-    #codes = ['002454']
+
+    codes_cyb = [x for x in codes if x.startswith('300')]
+    codes_zxb = [x for x in codes if x.startswith('002')]
+    codes = codes_cyb + codes_zxb
+    #codes = ['002570','300461']
 
     q_saver = multiprocessing.Queue(10000)
 
