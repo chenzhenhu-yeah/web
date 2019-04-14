@@ -251,7 +251,7 @@ def run():
 
     codes_cyb = [x for x in codes if x.startswith('300')]
     codes_zxb = [x for x in codes if x.startswith('002')]
-    codes = codes_cyb + codes_zxb
+    codes = codes_cyb + codes_zxb    
     #codes = ['002570','300461']
 
     q_saver = multiprocessing.Queue(10000)

@@ -13,8 +13,8 @@ from quant_001.stock_util import get_inx_mongo, get_stk_hfq_mongo, get_trading_d
 
 DB_CONN = MongoClient('mongodb://127.0.0.1:27017')['quant_001']
 
-cash = 1E8
-single_position = 200E4
+cash = 100E4
+single_position = 20E4
 
 
 def get_signal(df_signal,code,_date):
@@ -63,6 +63,7 @@ def calc_signal(df_signal, codes, flag):
                     df1 = MACD(df1)
                 #print(code)
                 #print(df1)
+                df1.to_csv('c1.csv')
                 df1['code'] = code
                 df_s = df_s.append(df1,sort=False)
     return df_s
@@ -83,6 +84,7 @@ def sell_stk(stk_holds,code,_date):
     return df_r
 
 def buy_stk(stk_holds,code,_date):
+    r = []
     df_r = stk_holds
     df_hold = stk_holds[stk_holds.index==code]
     if len(df_hold) == 0: #无持仓，则买入
@@ -97,6 +99,7 @@ def buy_stk(stk_holds,code,_date):
                 cash -= cost
                 df_r = stk_holds.append(pd.DataFrame([[num,cost]],columns=['num','cost'],index=[code]),sort=False)
                 print('******* buy stock '+ str((code, num, cost)))
+                r = [_date, code, cost]
             else:
                 print('buy stock '+code+', but cash not enough')
 
@@ -122,14 +125,14 @@ def backtest(begin_date, end_date):
         # 入池
         df1 =  df[df.date==_date]
         codes.update(set(df1['code']))
+        print(_date,codes)
 
         # 准备池中个股的MACD
         df_signal = calc_signal(df_signal,codes,'MACD')
-
         #卖出信号及操作
-        to_sell_codes = sell_signal(df_signal,codes, _date)
+        to_sell_codes = sell_signal(df_signal,list(stk_holds.index), _date)
         for code in to_sell_codes:
-            print('                       ****** sell signal '+ code +_date)
+            #print('****** sell signal '+ code +_date)
             stk_holds = sell_stk(stk_holds,code,_date)
             print(stk_holds)
 
@@ -137,9 +140,10 @@ def backtest(begin_date, end_date):
         #买入出信号及操作
         to_buy_codes = buy_signal(df_signal,codes, _date)
         for code in to_buy_codes:
-            print('                       ****** buy signal '+ code +_date)
+            #print('****** buy signal '+ code +_date)
             stk_holds = buy_stk(stk_holds,code,_date)
             print(stk_holds)
+            codes.remove(code)
 
     print('cash: ',cash)
     print(stk_holds)

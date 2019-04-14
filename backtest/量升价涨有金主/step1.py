@@ -3,8 +3,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 
-from hu_talib import MA
-from stock_util import get_inx_mongo, get_stk_hfq_mongo
+
+import sys
+sys.path.append(r'../../')
+from quant_001.hu_talib import MA, MACD
+from quant_001.stock_util import get_inx_mongo, get_stk_hfq_mongo, get_trading_dates_mongo
+from quant_001.database import DB_CONN
 
 def calc_inx(code,base_date, end_date):
     df = get_inx_mongo('399001',base_date, end_date)
@@ -69,7 +73,7 @@ if __name__ == "__main__":
     df_inx = calc_inx('399001',base_date, end_date)
 
     df_bottle = pd.read_csv('bottle.csv',dtype='str')
-    codes = ['002570','300408']
+    codes = ['002273','300433']
     for code in codes:
         df_v, df_c = calc_stk(code,base_date, end_date, df_inx)
         df_bottle = df_bottle.append(to_bottle(df_v, df_c))
