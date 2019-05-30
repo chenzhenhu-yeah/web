@@ -14,7 +14,7 @@ conn = pymongo.MongoClient('localhost', 27017)
 db = conn.companys         #连接mydb数据库，没有则自动创建
 cols = db.profit
 
-years =  [2018,2017,2016,2015]
+years =  [2019,2018,2017,2016,2015]
 
 def get_detail(rec):
     b = zlib.decompress(rec['detail'])
@@ -45,6 +45,9 @@ def get_tb(df):
 
 
 def built_profit(code):
+    '''
+    构建净利润矩阵
+    '''
     result = []
     for y in years:
         row = []
@@ -70,6 +73,9 @@ def built_profit(code):
     return df
 
 def built_bi(code):
+    '''
+    构建营收矩阵
+    '''
     result = []
     for y in years:
         row = []
@@ -125,6 +131,9 @@ def choose_profit(codes):
 
 
 def built_gross(code):
+    '''
+    构建毛利率矩阵
+    '''
     result = []
     for y in years:
         row = []
@@ -157,13 +166,16 @@ def choose_compare_Q(codes, pre_y, pre_q, cur_y, cur_q):
             stage += 0.1
 
         df_gross = built_gross(code)
+        # 毛利率大于30%
         if df_gross.iat[pre_y, pre_q]>30:
             df_bi = built_bi(code)
             df1 = get_tb(df_bi)
+            # 营收增速分别大于30%、50%
             if df1.iat[pre_y, pre_q]>30 and df1.iat[cur_y, cur_q]>50:
                 df_profit = built_profit(code)
                 df2 = get_tb(df_profit)
-                if df2.iat[pre_y, pre_q]>30 and df2.iat[cur_y, cur_q]>50:
+                # 净利润增速分别大于30%、50%
+                if df2.iat[pre_y, pre_q]>30 and df2.iat[cur_y, cur_q]>30:
                     r.append([code, df1.iat[pre_y, pre_q], df1.iat[cur_y, cur_q],df2.iat[pre_y, pre_q], df2.iat[cur_y, cur_q]])
 
     df = pd.DataFrame(r,columns=['code','pre_bi','cur_bi','pre_profit','cur_profit'])
@@ -189,17 +201,17 @@ def choose_single_Q(codes, cur_y, cur_q):
             df_bi = built_bi(code)
             df1 = get_tb(df_bi)
             #ipdb.set_trace()
-            if df1.iat[cur_y, cur_q]>30:
+            if df1.iat[cur_y, cur_q]>50:
                 df_profit = built_profit(code)
                 df2 = get_tb(df_profit)
-                if df2.iat[cur_y, cur_q]>50:
+                if df2.iat[cur_y, cur_q]>30:
                     r.append([code, df1.iat[cur_y, cur_q],df2.iat[cur_y, cur_q]])
 
     df = pd.DataFrame(r,columns=['code','cur_bi','cur_profit'])
     return df
 
 if __name__ == "__main__":
-    #df = pd.read_csv('stk_cyb.csv',dtype='str',encoding='gbk')
+    #stock_df = pd.read_csv('stk_cyb.csv',dtype='str',encoding='gbk')
     #df = pd.read_csv('stk_zxb.csv',dtype='str',encoding='gbk')
     #df = pd.read_csv('stk_sz.csv',dtype='str',encoding='gbk')
 
@@ -209,9 +221,8 @@ if __name__ == "__main__":
     stock_df = stock_df.set_index('code')
     codes = list(stock_df.index)
 
-    pre_y, pre_q = 0,1    #Q2
-    cur_y, cur_q = 0,2    #Q3
-    df1 = choose_compare_Q(codes, pre_y, pre_q, cur_y, cur_q)
+    cur_y, cur_q = 0,0    #Q3
+    df1 = choose_single_Q(codes, cur_y, cur_q)
     #cur_y, cur_q = 0,2      #Q3
     #df1 = choose_single_Q(codes, cur_y, cur_q)
     df1.to_csv('a2.csv',index=False)
@@ -222,4 +233,4 @@ if __name__ == "__main__":
     df2 = df2.loc[:,['name','industry','area','pe']]
     df2 = df2.join(df1)
     #df2.to_csv('sx_income_single_2018Q3.csv')
-    df2.to_csv('sx_income_compare_2018Q3.csv')
+    df2.to_csv('one_2019Q1.csv')

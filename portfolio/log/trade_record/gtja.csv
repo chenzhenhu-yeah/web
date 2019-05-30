@@ -13,3 +13,7 @@ date&ins
 20190306&"{'ins':'buy_order','portfolio':'advance','code':'519898','num':39650,'cost':39650,'agent':'gtja'}"
 20190408&"{'ins':'sell_order','portfolio':'advance','code':'128023','num':41,'cost':4096.72,'agent':'gtja'}"
 20190408&"{'ins':'buy_order','portfolio':'advance','code':'519898','num':4100,'cost':4100,'agent':'gtja'}"
+20190506&"{'ins':'buy_order','portfolio':'advance','code':'110030','num':200,'cost':20904,'agent':'gtja'}"
+20190506&"{'ins':'buy_order','portfolio':'advance','code':'110030','num':200,'cost':20924,'agent':'gtja'}"
+20190506&"{'ins':'buy_order','portfolio':'advance','code':'110030','num':200,'cost':20924,'agent':'gtja'}"
+20190506&"{'ins':'sell_order','portfolio':'advance','code':'519898','num':63000,'cost':63000,'agent':'gtja'}"

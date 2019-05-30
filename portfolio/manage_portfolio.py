@@ -23,7 +23,6 @@ def open_portfolio(ins_dict):
         df = df.append(df_dict,sort=False)
         df = df.loc[:,['portfolio','code','cost','num','agent']]
         df.to_csv(file_hold_security,index=False)
-        #to_log('portfolio_order: '+'open_portfolio success '+str(ins_dict))
     else:
         print('组合已存在！！！')
 
@@ -43,11 +42,11 @@ def close_portfolio(ins_dict):
             df = df.drop(index=portfolio_index)
             df = df.loc[:,['portfolio','code','cost','num','agent']]
             df.to_csv(file_hold_security,index=False)
-            to_log('portfolio_order: '+'close_portfolio success '+str(ins_dict))
+            print('portfolio_order: '+'close_portfolio success '+str(ins_dict))
         else:
-            to_log('portfolio_order: '+'close_portfolio failed '+str(ins_dict))
+            print('close_portfolio failed here1')
     else:
-        to_log('portfolio_order: '+'close_portfolio failed '+str(ins_dict))
+        print('close_portfolio failed here2')
 
 
 def buy_sell(ins_dict):
@@ -442,3 +441,9 @@ if __name__ == "__main__":
     #check_gtja()
     #pandian('gtja')
     pandian('pingan')
+
+    # 有bug!!!
+    # ins_dict = {'ins':'open_portfolio', 'portfolio':'c_bond','code':'cash01','cost':0,'num':0,'agent':'pingan'}
+    # open_portfolio(ins_dict)
+    # ins_dict = {'ins':'close_portfolio', 'portfolio':'wireless','agent':'pingan'}
+    # close_portfolio(ins_dict)
